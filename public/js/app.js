@@ -5,8 +5,15 @@ var socket = io();
 
 console.log(name + ' wants to join ' + room );
 
+jQuery('.room-title').text(room);
+
 socket.on('connect', function (){
 	console.log("Connected to socket.io server!");
+
+	socket.emit('joinRoom', {
+		name: name,
+		room: room
+	});
 });
 
 socket.on('message', function(message){
@@ -16,7 +23,7 @@ socket.on('message', function(message){
 	console.log(message.text);
 
 
-	$messages.append('<p><strong>'+ message.name+ ' '+ momentTimestamp.local().format('h:mm a') + '</strong></p>');
+	$messages.append('<p><strong>'+ message.name+ ' '+ momentTimestamp.local().format('h:mm a') + ' '+message.text+'</strong></p>');
 //	$messages.append('<p><strong>'+ momentTimestamp.local().format('h:mm a')+ ': </strong>'+message.text+'</p>');
 	$messages.append('<p>' + message.name + '</p>');
 
