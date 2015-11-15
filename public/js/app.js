@@ -23,9 +23,9 @@ socket.on('message', function(message){
 	console.log(message.text);
 
 
-	$messages.append('<p><strong>'+ message.name+ ' '+ momentTimestamp.local().format('h:mm a') + ' '+message.text+'</strong></p>');
+	$messages.append('<p><strong>'+ message.name+ ' '+ momentTimestamp.local().format('h:mm a') +'</strong></p>');
 //	$messages.append('<p><strong>'+ momentTimestamp.local().format('h:mm a')+ ': </strong>'+message.text+'</p>');
-	$messages.append('<p>' + message.name + '</p>');
+	$messages.append('<p>' + message.text + '</p>');
 
 });
 

@@ -12,9 +12,24 @@ var clientInfo = {};
 
 io.on('connection', function (socket) {
 	console.log('User connected via socket.io!');
+	var userData = clientInfo[socket.id];
+	socket.on('disconnect', function (){
+		
+
+		if (typeof userData !== 'undefined'){
+			socket.leave(userData.room);
+
+			io.to(userData.room).emit('message', {
+				name: 'System',
+				text: userData.name + ' has left!',
+				timestamp: moment().valueOf()
+			});
+			delete userData;
+		}
+	});
 
 	socket.on('joinRoom', function (req){
-		clientInfo[socket.id] = req;
+		userData = req;
 		socket.join(req.room);
 		socket.broadcast.to(req.room).emit('message', {
 			name: 'System',
@@ -26,7 +41,7 @@ io.on('connection', function (socket) {
 	socket.on('message', function (message){
 		console.log("Message received: "+message.text);
 		message.timestamp = moment().valueOf();
-		io.to(clientInfo[socket.id].room).emit('message', message);
+		io.to(userData.room).emit('message', message);
 	});
 
 
