@@ -4,7 +4,7 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var moment = require('moment');
-
+var Firebase = require("firebase");
 
 app.use(express.static(__dirname+'/public'));
 
@@ -82,6 +82,17 @@ io.on('connection', function (socket) {
 		timestamp: moment().valueOf()
 	});
 
+});
+
+// Get a reference to our posts
+var ref = new Firebase("https://docs-examples.firebaseio.com/web/saving-data/fireblog/posts");
+
+// Retrieve new posts as they are added to our database
+ref.on("child_added", function(snapshot, prevChildKey) {
+  var newPost = snapshot.val();
+  console.log("Author: " + newPost.author);
+  console.log("Title: " + newPost.title);
+  console.log("Previous Post ID: " + prevChildKey);
 });
 
 http.listen(PORT, function(){
